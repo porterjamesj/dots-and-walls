@@ -61,7 +61,7 @@ class Board:
 	# Differs from current_coordinate to account for graph edges (using % to wrap around)
 	# and for slight shift in where line ends (+1)
 	def calculate_next_coordinate(self, coordinate_point):
-		return self.board_size*10 + ((coordinate_point+1)%(self.board_size))*35 # Mod to circle around number of circles in row
+		return self.board_size*10 + ((coordinate_point+1) % (self.board_size)) * 35 # Mod to circle around number of circles in row
 
 	def get_win(self):
 		return self.win
@@ -78,7 +78,7 @@ class Board:
 		y_range = False
 		# Check if click touches any horizontal lines first
 		for line in self.get_r_empty_board_lines():
-			if x >= line.getP1().getX() and x <= line.getP2().getX():
+			if (x >= (line.getP1().getX() + 5) or x >= (line.getP1().getX() - 5)) and (x <= (line.getP2().getX() + 5) or x <= (line.getP2().getX() - 5)):
 				x_range = True	# within x range
 			if y >= line.getP1().getY() and y <= line.getP2().getY() + self.LINE_WIDTH:
 				y_range = True
@@ -189,6 +189,7 @@ class Game:
 		while chosen_line_count <= self.board.get_board_size() * self.board.get_board_size():
 			print("Player 1: Click on an empty line.")
 			click = self.board.get_win().getMouse()
+			print("x, y:", click.getX(), click.getY())
 			clicked_line = self.board.get_line(click)
 			isValid = self.check_filled_lines(click)
 			if clicked_line != None and isValid:
