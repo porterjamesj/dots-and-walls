@@ -244,7 +244,7 @@ class Game:
 		empty_line_count = self.board.get_num_empty_lines()
 		print("# Empty:",empty_line_count)
 		chosen_line_count = self.board.get_num_chosen_lines()
-		print("# Chosen",chosen_line_count)
+		print("# Chosen:",chosen_line_count)
 
 		# Begin game until all board lines chosen
 		while chosen_line_count <= self.board.get_board_size() * self.board.get_board_size():
@@ -255,7 +255,7 @@ class Game:
 			if clicked_line != None:
 				isValid = self.check_chosen_lines(clicked_line)
 				if isValid:
-					print("This line has not been clicked.")
+					print("This line has not been clicked. Proceed.")
 					self.board.update_board(clicked_line, 0)
 					isSquare = self.check_complete_square(clicked_line, 0)
 				else:
@@ -273,15 +273,30 @@ class Game:
 		this_x2 = clicked_line.getP2().getX()
 		orig_x1_coordinate = self.board.calculate_original_coordinate(this_x1)
 		orig_x2_coordinate = self.board.calculate_original_coordinate(this_x2)
+
+		print("this_x1:", this_x1)
+		print("this_x2:", this_x2)
+
+		print("original_x1 coordinate:", orig_x1_coordinate)
+		print("original_x2 coordinate:", orig_x2_coordinate)
+		print("\n")
 		
 		# Do same for y
 		this_y1 = clicked_line.getP1().getY()
 		this_y2 = clicked_line.getP2().getY()
 		orig_y1_coordinate = self.board.calculate_original_coordinate(this_y1)
 		orig_y2_coordinate = self.board.calculate_original_coordinate(this_y2)
+
+		print("this_y1:", this_y1)
+		print("this_y2:", this_y2)
+
+		print("original_y1 coordinate:", orig_y1_coordinate)
+		print("original_y2 coordinate:", orig_y2_coordinate)
+		print("\n")
 		
 		# If vertical line:
 		if this_x1 == this_x2:
+			print("This is a VERTICAL line. Gathering neighbors...\n")
 
 			# Left
 			left_neighbor_x1 = self.board.calculate_current_coordinate(orig_x1_coordinate - 1)
@@ -327,9 +342,9 @@ class Game:
 
 			print("\nThe following are lines already in chosen_lines:")
 			if right in self.board.chosen_lines:
-				print("Horizontal top")
+				print("Vertical right")
 			if left in self.board.chosen_lines:
-				print("Horizontal bottom")
+				print("Vertical left")
 			if top_right in self.board.chosen_lines:
 				print("Horizontal top right")
 			if top_left in self.board.chosen_lines:
@@ -347,6 +362,7 @@ class Game:
 
 		# Horizontal lines
 		elif this_y1 == this_y2:
+			print("This is a HORIZONTAL line. Gathering neighbors...\n")
 
 			# Top
 			top_neighbor_y1 = self.board.calculate_current_coordinate(orig_y1_coordinate - 1)
@@ -359,7 +375,7 @@ class Game:
 			bottom_neighbor_y1 = self.board.calculate_current_coordinate(orig_y1_coordinate + 1)
 			bottom_pt1 = Point(this_x1, bottom_neighbor_y1)
 			bottom_pt2 = Point(this_x2, bottom_neighbor_y1)
-			bottom = self.board.get_line(Line(top_pt1, top_pt2))
+			bottom = self.board.get_line(Line(bottom_pt1, bottom_pt2))
 			print("Bottom neighbor line start: ", this_x1, bottom_neighbor_y1, " | end: ", this_x2, bottom_neighbor_y1)
 			
 			# Top-left (a vertical line)
@@ -371,9 +387,9 @@ class Game:
 			
 			# Top-right (a vertical line)
 			top_right_neighbor_y1 = self.board.calculate_current_coordinate(orig_y1_coordinate - 1)
-			top_right_pt1 = Point(this_x2, top_left_neighbor_y1)
+			top_right_pt1 = Point(this_x2, top_right_neighbor_y1)
 			top_right_pt2 = Point(this_x2, this_y1)
-			top_right = self.board.get_line(Line(top_right_pt1, top_left_pt2))
+			top_right = self.board.get_line(Line(top_right_pt1, top_right_pt2))
 			print("Top-right neighbor line start: ", this_x2, top_right_neighbor_y1, " | end: ", this_x2, this_y1)
 			
 			# Bottom-left (a vertical line)
@@ -401,9 +417,9 @@ class Game:
 
 			print("\nThe following are lines already in chosen_lines:")
 			if top in self.board.chosen_lines:
-				print("Vertical top")
+				print("Horizontal top")
 			if bottom in self.board.chosen_lines:
-				print("Vertical bottom")
+				print("Horizontal bottom")
 			if top_right in self.board.chosen_lines:
 				print("Vertical top right")
 			if top_left in self.board.chosen_lines:
@@ -419,19 +435,6 @@ class Game:
 			if bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
 
-		#if (top in self.board.chosen_lines and top_right in self.board.chosen_lines and top_left in self.board.chosen_lines):
-		#	print("SQUARE!")
-		#if (bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines):
-		#	print("ANOTHER SQUARE!")
-
-
-
-		# Do all 6 sides
-		# Check for either square pairing in chosen_line array
-
-		#for line in self.board.get_chosen_lines():
-		#	# For vertical lines
-		#	if clicked_line.getP1().getX() == clicked_line.getP2().getX():
 		return 
 
 
