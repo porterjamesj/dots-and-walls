@@ -66,10 +66,11 @@ class Board:
 				elif line.getP1().getY() == line.getP2().getY():
 					print("It's a match! Neighbor line matches horizontal line in chosen_lines")
 				return line
-			else:
-				print("No line found.")
-				return None
 
+		print("No line found.")
+		return None
+
+	# Completely wacky, beware
 	def get_a_line(self, clicked_line):
 		x = clicked_line.getP1().getX()
 		y = clicked_line.getP1().getY()
@@ -355,9 +356,9 @@ class Game:
 				print("Horizontal bottom left")
 
 			# Check for completed squares
-			if left in self.board.chosen_lines and top_right in self.board.chosen_lines and bottom_right in self.board.chosen_lines:
+			if right in self.board.chosen_lines and top_right in self.board.chosen_lines and bottom_right in self.board.chosen_lines:
 				print("SQUARE!")
-			if right in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
+			if left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
 
 		# Horizontal lines
