@@ -6,9 +6,11 @@ class Board:
 		self.board_size = board_size
 		self.empty_lines = []
 		self.chosen_lines = []
+		self.circles = []
 		self.win = None
 		self.LINE_WIDTH = 6
 		self.create_board()
+		
 		return
 
 	def get_win(self):
@@ -132,7 +134,6 @@ class Board:
 		self.win = GraphWin("Dots and Walls", self.board_size * 100, self.board_size * 100)
 		self.win.setBackground(color_rgb(255, 255, 255))
 		point = None
-		circles = []
 
 		for x in range(self.board_size):
 			for y in range(self.board_size):
@@ -146,7 +147,7 @@ class Board:
 				point = Point(current_x, current_y)
 				c = Circle(point, 5)
 				c.setFill(color_rgb(50, 50, 50))
-				circles.append(c)
+				self.circles.append(c)
 
 				# Draw lines on screen
 				if (prev_point != None):
@@ -161,7 +162,9 @@ class Board:
 
 					# Draw horizontal lines
 					if x < self.board_size - 1 and point.getX() >= prev_point.getX():
-						h_end = Point(self.calculate_current_coordinate(x+1), prev_point.getY())
+						h_end = Point(self.calculate_current_coordinate(x + 1), prev_point.getY())
+						#if y == self.board_size - 1:
+						#	h_end = Point(self.calculate_current_coordinate(x+5), prev_point.getY())
 						h_line = Line(prev_point, h_end)
 						h_line.setOutline(color_rgb(225, 225, 225))
 						h_line.setWidth(self.LINE_WIDTH)
@@ -171,7 +174,7 @@ class Board:
 
 		# Draw circles on screen
 		# (Keeps circle on top of lines by drawing until the end)
-		for c in circles:
+		for c in self.circles:
 			c.draw(self.get_win())
 
 		# TODO: Remove or move to other fn:
@@ -195,7 +198,7 @@ class Board:
 		if player_id == 0:
 			line.setOutline(color_rgb(38, 181, 172))
 		elif player_id == 1:
-			line.setOutline(color_rgb(119, 181, 38))
+			line.setOutline(color_rgb(199, 69, 26))
 		line.setWidth(self.LINE_WIDTH)
 		line.draw(self.get_win())
 
@@ -204,6 +207,21 @@ class Board:
 		print("\n")
 
 		return
+
+	def draw_square(self, point1, point2, player_id):
+		square = Rectangle(point1, point2)
+		if player_id == 0:
+			square.setOutline(color_rgb(38, 181, 172))
+			square.setFill(color_rgb(38, 181, 172))
+		elif player_id == 1:
+			square.setOutline(color_rgb(199, 69, 26))
+			square.setFill(color_rgb(199, 69, 26))
+		square.draw(self.get_win())
+
+		# Now redraw circles on top
+		for c in self.circles:
+			c.undraw()
+			c.draw(self.get_win())
 
 	def calculate_current_coordinate(self, coordinate_point):
 		return self.board_size * 10 + coordinate_point * 50
@@ -261,6 +279,25 @@ class Game:
 					isSquare = self.check_complete_square(clicked_line, 0)
 				else:
 					print("Line has already been clicked.")
+
+			if chosen_line_count >= self.board.get_board_size() * self.board.get_board_size():
+				break
+
+			# Player 2
+			print("\nPlayer 2: Click on an empty line.")
+			click = self.board.get_win().getMouse()
+			print("x, y:", click.getX(), click.getY())
+			clicked_line = self.board.get_line_from_click(click, self.board.empty_lines)
+			if clicked_line != None:
+				isValid = self.check_chosen_lines(clicked_line)
+				if isValid:
+					print("This line has not been clicked. Proceed.")
+					self.board.update_board(clicked_line, 1)
+					isSquare = self.check_complete_square(clicked_line, 1)
+				else:
+					print("Line has already been clicked.")
+
+		print("You've reached the end! Calculating score TBD...")
 
 	def check_chosen_lines(self, clicked_line):
 		if clicked_line in self.board.get_chosen_lines():
@@ -358,8 +395,10 @@ class Game:
 			# Check for completed squares
 			if right in self.board.chosen_lines and top_right in self.board.chosen_lines and bottom_right in self.board.chosen_lines:
 				print("SQUARE!")
+				self.board.draw_square(clicked_line.getP1(), right.getP2(), player_id)
 			if left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
+				self.board.draw_square(left.getP1(), clicked_line.getP2(), player_id)
 
 		# Horizontal lines
 		elif this_y1 == this_y2:
@@ -433,8 +472,10 @@ class Game:
 			# Check for complete square
 			if top in self.board.chosen_lines and top_right in self.board.chosen_lines and top_left in self.board.chosen_lines:
 				print("SQUARE!")
+				self.board.draw_square(top.getP1(), clicked_line.getP2(), player_id)
 			if bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
+				self.board.draw_square(clicked_line.getP1(), bottom.getP2(), player_id)
 
 		return 
 
