@@ -243,10 +243,30 @@ class Board:
 class Player:
 	def __init__(self, player_id):
 		self.score = 0
-		self.id = player_id
+		self.player_id = player_id
+		self.color_id = None
+		self.set_color_id()
+
+	def set_color_id(self):
+		if self.player_id == 0:
+			self.color_id = color_rgb(38, 181, 172)
+		else:
+			self.color_id = color_rgb(199, 69, 26)
+		return
+
+	def get_player_id(self):
+		return self.player_id
+
+	def get_color_id(self):
+		return self.color_id
+
+	def get_score(self):
+		return self.score
 
 	def add_score(self, score_increment):
 		self.score = self.score + score_increment
+		return
+
 
 class Game:
 	def __init__(self, board_size):
@@ -265,39 +285,45 @@ class Game:
 		chosen_line_count = self.board.get_num_chosen_lines()
 		print("# Chosen:",chosen_line_count)
 
+		active_player = self.player1
 		# Begin game until all board lines chosen
 		while chosen_line_count <= self.board.get_board_size() * self.board.get_board_size():
-			print("\nPlayer 1: Click on an empty line.")
-			click = self.board.get_win().getMouse()
-			print("x, y:", click.getX(), click.getY())
-			clicked_line = self.board.get_line_from_click(click, self.board.empty_lines)
-			if clicked_line != None:
-				isValid = self.check_chosen_lines(clicked_line)
-				if isValid:
-					print("This line has not been clicked. Proceed.")
-					self.board.update_board(clicked_line, 0)
-					isSquare = self.check_complete_square(clicked_line, 0)
-				else:
-					print("Line has already been clicked.")
+			isSquare = self.play_turn(active_player)
 
-			if chosen_line_count >= self.board.get_board_size() * self.board.get_board_size():
-				break
-
-			# Player 2
-			print("\nPlayer 2: Click on an empty line.")
-			click = self.board.get_win().getMouse()
-			print("x, y:", click.getX(), click.getY())
-			clicked_line = self.board.get_line_from_click(click, self.board.empty_lines)
-			if clicked_line != None:
-				isValid = self.check_chosen_lines(clicked_line)
-				if isValid:
-					print("This line has not been clicked. Proceed.")
-					self.board.update_board(clicked_line, 1)
-					isSquare = self.check_complete_square(clicked_line, 1)
-				else:
-					print("Line has already been clicked.")
+			# If completed square, same player keeps next turn
+			while isSquare == True:
+				isSquare = self.play_turn(active_player)
+				if chosen_line_count >= self.board.get_board_size() * self.board.get_board_size():
+					break
+			# Switch players
+			if active_player == self.player1:
+				active_player = self.player2
+			elif active_player == self.player2:
+				active_player = self.player1
 
 		print("You've reached the end! Calculating score TBD...")
+
+	def play_turn(self, player):
+		if player.get_player_id() == 0:
+			print("\nPlayer 1: Click on an empty line.")
+		elif player.get_player_id() == 1:
+			print("\nPlayer 2: Click on an empty line.")
+
+		click = self.board.get_win().getMouse()
+		print("x, y:", click.getX(), click.getY())
+		clicked_line = self.board.get_line_from_click(click, self.board.empty_lines)
+		if clicked_line != None:
+			isValid = self.check_chosen_lines(clicked_line)
+			if isValid:
+				print("This line has not been clicked. Proceed.")
+				self.board.update_board(clicked_line, player.get_player_id())
+				isSquare = self.check_complete_square(clicked_line, player.get_player_id())
+				return isSquare
+			else:
+				print("Line has already been clicked.")
+		else:
+			print("Not a valid line.")
+		return False
 
 	def check_chosen_lines(self, clicked_line):
 		if clicked_line in self.board.get_chosen_lines():
@@ -305,6 +331,8 @@ class Game:
 		return True
 
 	def check_complete_square(self, clicked_line, player_id):
+		isSquare = False
+
 		# Grab original coordinate points for x, then
 		# Recalculate to get next x/y neighbor
 		this_x1 = clicked_line.getP1().getX()
@@ -396,9 +424,11 @@ class Game:
 			if right in self.board.chosen_lines and top_right in self.board.chosen_lines and bottom_right in self.board.chosen_lines:
 				print("SQUARE!")
 				self.board.draw_square(clicked_line.getP1(), right.getP2(), player_id)
-			if left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
+				isSquare = True
+			elif left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
 				self.board.draw_square(left.getP1(), clicked_line.getP2(), player_id)
+				isSquare = True
 
 		# Horizontal lines
 		elif this_y1 == this_y2:
@@ -473,11 +503,13 @@ class Game:
 			if top in self.board.chosen_lines and top_right in self.board.chosen_lines and top_left in self.board.chosen_lines:
 				print("SQUARE!")
 				self.board.draw_square(top.getP1(), clicked_line.getP2(), player_id)
-			if bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
+				isSquare = True
+			elif bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
 				self.board.draw_square(clicked_line.getP1(), bottom.getP2(), player_id)
+				isSquare = True
 
-		return 
+		return isSquare
 
 
 def main():
