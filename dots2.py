@@ -425,7 +425,7 @@ class Game:
 				print("SQUARE!")
 				self.board.draw_square(clicked_line.getP1(), right.getP2(), player_id)
 				isSquare = True
-			elif left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
+			if left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
 				self.board.draw_square(left.getP1(), clicked_line.getP2(), player_id)
 				isSquare = True
@@ -504,7 +504,7 @@ class Game:
 				print("SQUARE!")
 				self.board.draw_square(top.getP1(), clicked_line.getP2(), player_id)
 				isSquare = True
-			elif bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
+			if bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
 				self.board.draw_square(clicked_line.getP1(), bottom.getP2(), player_id)
 				isSquare = True
