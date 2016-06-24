@@ -301,6 +301,11 @@ class Game:
 			elif active_player == self.player2:
 				active_player = self.player1
 
+			score1 = self.player1.get_score()
+			score2 = self.player2.get_score()
+			print("Player 1 score:", score1)
+			print("Player 2 score:", score2)
+
 		print("You've reached the end! Calculating score TBD...")
 
 	def play_turn(self, player):
@@ -317,7 +322,7 @@ class Game:
 			if isValid:
 				print("This line has not been clicked. Proceed.")
 				self.board.update_board(clicked_line, player.get_player_id())
-				isSquare = self.check_complete_square(clicked_line, player.get_player_id())
+				isSquare = self.check_complete_square(clicked_line, player)
 				return isSquare
 			else:
 				print("Line has already been clicked.")
@@ -330,7 +335,7 @@ class Game:
 			return False
 		return True
 
-	def check_complete_square(self, clicked_line, player_id):
+	def check_complete_square(self, clicked_line, player):
 		isSquare = False
 
 		# Grab original coordinate points for x, then
@@ -423,11 +428,15 @@ class Game:
 			# Check for completed squares
 			if right in self.board.chosen_lines and top_right in self.board.chosen_lines and bottom_right in self.board.chosen_lines:
 				print("SQUARE!")
-				self.board.draw_square(clicked_line.getP1(), right.getP2(), player_id)
+				self.board.draw_square(clicked_line.getP1(), right.getP2(), player.get_player_id())
+				player.add_score(10)
+				print("10 points for Hufflepuff!")
 				isSquare = True
 			if left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
-				self.board.draw_square(left.getP1(), clicked_line.getP2(), player_id)
+				self.board.draw_square(left.getP1(), clicked_line.getP2(), player.get_player_id())
+				player.add_score(10)
+				print("10 points for Hufflepuff!")
 				isSquare = True
 
 		# Horizontal lines
@@ -475,15 +484,6 @@ class Game:
 			bottom_right_pt2 = Point(this_x2, bottom_right_neighbor_y2)
 			bottom_right = self.board.get_line(Line(bottom_right_pt1, bottom_right_pt2))
 			print("Bottom-right neighbor line start: ", this_x2, this_y2, " | end: ", this_x2, bottom_right_neighbor_y2)
-			
-			# Check for either square pairing in chosen_line array
-			#top_right_line = self.board.get_line(top_right)
-			# fetched_line = self.board.get_line(clicked_line.getP1(), self.board.chosen_lines)
-			# if (top_left in chosen_lines) and (top in chosen_lines) and (top_right in chosen_lines):
-			# 	print("Your vertical line yielded a square! 1")
-			# if (bottom_left in chosen_lines) and (bottom in chosen_lines) and (bottom_right in chosen_lines):
-			# 	print("Your vertical line yielded a square! 2")
-
 
 			print("\nThe following are lines already in chosen_lines:")
 			if top in self.board.chosen_lines:
@@ -502,11 +502,15 @@ class Game:
 			# Check for complete square
 			if top in self.board.chosen_lines and top_right in self.board.chosen_lines and top_left in self.board.chosen_lines:
 				print("SQUARE!")
-				self.board.draw_square(top.getP1(), clicked_line.getP2(), player_id)
+				self.board.draw_square(top.getP1(), clicked_line.getP2(), player.get_player_id())
+				player.add_score(10)
+				print("10 points for Hufflepuff!")
 				isSquare = True
 			if bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
 				print("BOTTOM SQUARE!")
-				self.board.draw_square(clicked_line.getP1(), bottom.getP2(), player_id)
+				self.board.draw_square(clicked_line.getP1(), bottom.getP2(), player.get_player_id())
+				player.add_score(10)
+				print("10 points for Hufflepuff!")
 				isSquare = True
 
 		return isSquare
