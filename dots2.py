@@ -162,10 +162,10 @@ class Board:
 
 					# Draw horizontal lines
 					if x < self.board_size - 1 and point.getX() >= prev_point.getX():
-						h_end = Point(self.calculate_current_coordinate(x + 1), prev_point.getY())
+						h_end = Point(self.calculate_current_coordinate(x + 1), point.getY())
 						#if y == self.board_size - 1:
 						#	h_end = Point(self.calculate_current_coordinate(x+5), prev_point.getY())
-						h_line = Line(prev_point, h_end)
+						h_line = Line(point, h_end)
 						h_line.setOutline(color_rgb(225, 225, 225))
 						h_line.setWidth(self.LINE_WIDTH)
 						h_line.draw(self.get_win())
