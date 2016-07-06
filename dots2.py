@@ -1,3 +1,9 @@
+# Name: Dots and Boxes
+# Date: June 2016
+# Creator: Nayely Martinez (nayely.e.martinez@gmail.com)
+# A Python version of the classic two-player Dots and Boxes games. 
+# 	Players take turns trying to fill in as many boxes as possible.
+
 import sys
 from graphics import *
 
@@ -16,6 +22,7 @@ class Board:
 	def get_win(self):
 		return self.win
 
+	# Returns line object from array given mouse coordinate
 	def get_line_from_click(self, click, line_array):
 		x = click.getX()
 		y = click.getY()
@@ -53,6 +60,7 @@ class Board:
 		print("No line found.")
 		return None
 
+	# Returns line object from array given clicked line
 	def get_line(self, clicked_line):
 		x1 = clicked_line.getP1().getX()
 		y1 = clicked_line.getP1().getY()
@@ -69,46 +77,6 @@ class Board:
 					print("It's a match! Neighbor line matches horizontal line in chosen_lines")
 				return line
 
-		print("No line found.")
-		return None
-
-	# Completely wacky, beware
-	def get_a_line(self, clicked_line):
-		x = clicked_line.getP1().getX()
-		y = clicked_line.getP1().getY()
-		x_range = False
-		y_range = False
-
-		for line in self.chosen_lines:
-			# Check vertical lines in array
-			if line.getP1().getX() == line.getP2().getX():
-				# Check if click matches range in line's horizontal width (gives some padding)
-				#print("x is greater than ", line.getP1().getX() - 2, "and less than ", line.getP1().getX() + 2)
-				if (x >= (line.getP1().getX() - 4)) and (x <= (line.getP1().getX() + 4)):
-					x_range = True
-				#print("y is greater than ", line.getP1().getY(), "and less than ", line.getP2().getY())
-				if y >= line.getP1().getY() and y <= line.getP2().getY():
-					y_range = True
-				if x_range and y_range:
-					print("Neighbor line matches vertical line in chosen_lines")
-					return line
-
-			# Check horizontal lines in array
-			elif line.getP1().getY() == line.getP2().getY():
-				# Check if click matches range in line's vertical width
-				if (y >= (line.getP1().getY() - 4)) and (y <= (line.getP1().getY() + 4)):
-					y_range = True
-				if x >= line.getP1().getX() and x <= line.getP2().getX():
-					x_range = True
-				if x_range and y_range:
-					print("Neighbor line matches horizontal line in chosen_lines")
-					return line
-
-			# Reset checks at end of each loop
-			x_range = False
-			y_range = False
-
-		# Click does not match within any line range
 		print("No line found.")
 		return None
 
@@ -131,9 +99,10 @@ class Board:
 		return self.board_size
 
 	def create_board(self):
-		self.win = GraphWin("Dots and Walls", self.board_size * 100, self.board_size * 100)
+		self.win = GraphWin("Dots and Walls", self.board_size * 60, self.board_size * 60)
 		self.win.setBackground(color_rgb(255, 255, 255))
-		point = None
+		point = Point(self.calculate_current_coordinate(0), self.calculate_current_coordinate(0))
+		prev_point = None
 
 		for x in range(self.board_size):
 			for y in range(self.board_size):
@@ -162,9 +131,8 @@ class Board:
 
 					# Draw horizontal lines
 					if x < self.board_size - 1 and point.getX() >= prev_point.getX():
+						print("MEOW x:", x, "y:", y)
 						h_end = Point(self.calculate_current_coordinate(x + 1), point.getY())
-						#if y == self.board_size - 1:
-						#	h_end = Point(self.calculate_current_coordinate(x+5), prev_point.getY())
 						h_line = Line(point, h_end)
 						h_line.setOutline(color_rgb(225, 225, 225))
 						h_line.setWidth(self.LINE_WIDTH)
@@ -173,11 +141,10 @@ class Board:
 						self.empty_lines.append(h_line)
 
 		# Draw circles on screen
-		# (Keeps circle on top of lines by drawing until the end)
+		# (Keeps circle on top of lines by drawing at the end)
 		for c in self.circles:
 			c.draw(self.get_win())
 
-		# TODO: Remove or move to other fn:
 		self.print_empty_lines()
 		return
 
@@ -218,10 +185,11 @@ class Board:
 			square.setFill(color_rgb(199, 69, 26))
 		square.draw(self.get_win())
 
-		# Now redraw circles on top
-		for c in self.circles:
-			c.undraw()
-			c.draw(self.get_win())
+		# Now redraw circles on top (only for board sizes less than 6) for better graphics
+		if self.board_size < 6:
+			for c in self.circles:
+				c.undraw()
+				c.draw(self.get_win())
 
 	def calculate_current_coordinate(self, coordinate_point):
 		return self.board_size * 10 + coordinate_point * 50
@@ -273,6 +241,7 @@ class Game:
 		self.board = Board(board_size)
 		self.player1 = Player(0)
 		self.player2 = Player(1)
+		self.isValid = True
 		self.start_game()
 		return
 
@@ -287,7 +256,7 @@ class Game:
 
 		active_player = self.player1
 		# Begin game until all board lines chosen
-		while chosen_line_count <= self.board.get_board_size() * self.board.get_board_size():
+		while chosen_line_count < self.board.get_board_size() * self.board.get_board_size():
 			isSquare = self.play_turn(active_player)
 
 			# If completed square, same player keeps next turn
@@ -296,9 +265,9 @@ class Game:
 				if chosen_line_count >= self.board.get_board_size() * self.board.get_board_size():
 					break
 			# Switch players
-			if active_player == self.player1:
+			if active_player == self.player1 and self.isValid:
 				active_player = self.player2
-			elif active_player == self.player2:
+			elif active_player == self.player2 and self.isValid:
 				active_player = self.player1
 
 			score1 = self.player1.get_score()
@@ -318,8 +287,8 @@ class Game:
 		print("x, y:", click.getX(), click.getY())
 		clicked_line = self.board.get_line_from_click(click, self.board.empty_lines)
 		if clicked_line != None:
-			isValid = self.check_chosen_lines(clicked_line)
-			if isValid:
+			self.isValid = self.check_chosen_lines(clicked_line)
+			if self.isValid:
 				print("This line has not been clicked. Proceed.")
 				self.board.update_board(clicked_line, player.get_player_id())
 				isSquare = self.check_complete_square(clicked_line, player)
@@ -328,6 +297,7 @@ class Game:
 				print("Line has already been clicked.")
 		else:
 			print("Not a valid line.")
+			self.isValid = False
 		return False
 
 	def check_chosen_lines(self, clicked_line):
@@ -517,7 +487,7 @@ class Game:
 
 
 def main():
-	board_size = input("Enter board size (between 2-10):")
+	board_size = input("Enter board size (between 3-10):")
 	while (int(board_size) <= 2) or (int(board_size) >= 10):
 		print("Invalid number. Try again, or press 'q' to quit game.")
 		board_size = input("Enter board size (between 2-10):")
