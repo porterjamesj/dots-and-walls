@@ -245,7 +245,7 @@ class Game:
             isSquare = self.play_turn(active_player)
 
             # If completed square, same player keeps next turn
-            while isSquare == True:
+            while isSquare:
                 if self.board.num_empty_lines <= 1:
                     break
                 isSquare = self.play_turn(active_player)
