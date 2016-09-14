@@ -84,7 +84,8 @@ class Board:
         #print("No line found.")
         return None
 
-    def get_num_empty_lines(self):
+    @property
+    def num_empty_lines(self):
         return len(self.empty_lines)
 
     def get_num_chosen_lines(self):
@@ -160,8 +161,7 @@ class Board:
         self.empty_lines.remove(clicked_line)
 
         # Print initial line counts
-        empty_line_count = self.get_num_empty_lines()
-        print("# Empty lines:", empty_line_count)
+        print("# Empty lines:", self.num_empty_lines)
         chosen_line_count = self.get_num_chosen_lines()
         print("# Chosen lines", chosen_line_count)
 
@@ -246,18 +246,14 @@ class Game:
     def start_game(self):
         print("Let's begin!")
 
-        # Print initial line counts
-        empty_line_count = self.board.get_num_empty_lines()
-        chosen_line_count = self.board.get_num_chosen_lines()
-
         active_player = self.player1
         # Begin game until all board lines chosen
-        while self.board.get_num_empty_lines() > 1:
+        while self.board.num_empty_lines > 1:
             isSquare = self.play_turn(active_player)
 
             # If completed square, same player keeps next turn
             while isSquare == True:
-                if self.board.get_num_empty_lines() <= 1:
+                if self.board.num_empty_lines <= 1:
                     break
                 isSquare = self.play_turn(active_player)
 
