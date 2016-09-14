@@ -109,6 +109,35 @@ class Board:
     def get_board_size(self):
         return self.board_size
 
+    def draw_point(self, x, y):
+        current_x = self.calculate_current_coordinate(x)
+        current_y = self.calculate_current_coordinate(y)
+        point = Point(current_x, current_y)
+        c = Circle(point, 5)
+        c.setFill(color_rgb(50, 50, 50))
+        self.circles.append(c)
+        return point
+
+    def draw_vertical_line(self, x, y, point_a, point_b):
+        if y < self.board_size and point_b.getY() >= point_a.getY():
+            v_line = Line(point_a, point_b)
+            v_line.setOutline(color_rgb(225, 225, 225))
+            v_line.setWidth(self.LINE_WIDTH)
+            v_line.draw(self.get_win())
+            # Add to array of empty lines
+            self.empty_lines.append(v_line)
+
+    def draw_horizontal_line(self, x, y, point_a, point_b):
+        if x < self.board_size - 1 and point_b.getX() >= point_a.getX():
+            h_end = Point(self.calculate_current_coordinate(
+                x + 1), point_b.getY())
+            h_line = Line(point_b, h_end)
+            h_line.setOutline(color_rgb(225, 225, 225))
+            h_line.setWidth(self.LINE_WIDTH)
+            h_line.draw(self.get_win())
+            # Add to array of empty lines
+            self.empty_lines.append(h_line)
+
     def create_board(self):
         self.win = GraphWin(
             "Dots and Walls", self.board_size * 60, self.board_size * 60)
@@ -120,38 +149,15 @@ class Board:
         for x in range(self.board_size):
             for y in range(self.board_size):
 
-                current_x = self.calculate_current_coordinate(x)
-                current_y = self.calculate_current_coordinate(y)
                 #print("Current x, y = ", current_x, current_y)
+                prev_point = point
 
                 # Draw points (circles) on screen
-                prev_point = point
-                point = Point(current_x, current_y)
-                c = Circle(point, 5)
-                c.setFill(color_rgb(50, 50, 50))
-                self.circles.append(c)
+                point = self.draw_point(x, y)
 
-                # Draw lines on screen
                 if (prev_point != None):
-                    # Draw vertical lines
-                    if y < self.board_size and point.getY() >= prev_point.getY():
-                        v_line = Line(prev_point, point)
-                        v_line.setOutline(color_rgb(225, 225, 225))
-                        v_line.setWidth(self.LINE_WIDTH)
-                        v_line.draw(self.get_win())
-                        # Add to array of empty lines
-                        self.empty_lines.append(v_line)
-
-                    # Draw horizontal lines
-                    if x < self.board_size - 1 and point.getX() >= prev_point.getX():
-                        h_end = Point(self.calculate_current_coordinate(
-                            x + 1), point.getY())
-                        h_line = Line(point, h_end)
-                        h_line.setOutline(color_rgb(225, 225, 225))
-                        h_line.setWidth(self.LINE_WIDTH)
-                        h_line.draw(self.get_win())
-                        # Add to array of empty lines
-                        self.empty_lines.append(h_line)
+                    self.draw_vertical_line(x, y, prev_point, point)
+                    self.draw_horizontal_line(x, y, prev_point, point)
 
         # Draw circles on screen
         # (Keeps circle on top of lines by drawing at the end)
