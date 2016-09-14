@@ -28,18 +28,29 @@ class Board:
 
         return
 
+    def line_is_vertical(self, line):
+        return line.getP1().getX() == line.getP2().getX()
+
+    def line_is_horizontal(self, line):
+        return line.getP1().getY() == line.getP2().getY()
+
     def is_click_inside_line(self, click, line):
         PADDING = 4
 
-        x = click.getX()
-        y = click.getY()
+        click_x = click.getX()
+        click_y = click.getY()
 
-        if line.getP1().getX() == line.getP2().getX():
-            x_range = x >= (line.getP1().getX() - PADDING) and x <= (line.getP1().getX() + PADDING)
-            y_range = y >= line.getP1().getY() and y <= line.getP2().getY()
-        elif line.getP1().getY() == line.getP2().getY():
-            y_range = y >= (line.getP1().getY() - PADDING) and y <= (line.getP1().getY() + PADDING)
-            x_range = x >= line.getP1().getX() and x <= line.getP2().getX()
+        p1x = line.getP1().getX()
+        p1y = line.getP1().getY()
+        p2x = line.getP2().getX()
+        p2y = line.getP2().getY()
+
+        if self.line_is_vertical(line):
+            x_range = click_x >= (p1x - PADDING) and click_x <= (p1x + PADDING)
+            y_range = click_y >= p1y and click_y <= p2y
+        elif self.line_is_horizontal(line):
+            y_range = click_y >= (p1y - PADDING) and click_y <= (p1y + PADDING)
+            x_range = click_x >= p1x and click_x <= p2x
         return x_range and y_range
 
     def get_line_from_click(self, click):
