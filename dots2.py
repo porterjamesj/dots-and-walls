@@ -5,6 +5,12 @@
 # 	Players take turns trying to fill in as many boxes as possible.
 
 import sys
+# generally people try not to import *, since it can make it confusing
+# what module variables are coming from. in your case since there's
+# only one module it's relatively clear, but still something to be aware of :)
+#
+# a good alternative if you need a lot of things from a module is
+# `import graphics as g`, and then refer to things as `g.Whatever`.
 from graphics import *
 
 
