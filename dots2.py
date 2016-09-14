@@ -35,12 +35,14 @@ class Board:
         x_range = False
         y_range = False
 
+        PADDING = 4
+
         for line in self.empty_lines:
             # Check vertical lines in array
             if line.getP1().getX() == line.getP2().getX():
                 # Check if click matches range in line's horizontal width (gives some padding)
                 #print("x is greater than ", line.getP1().getX() - 2, "and less than ", line.getP1().getX() + 2)
-                if (x >= (line.getP1().getX() - 4)) and (x <= (line.getP1().getX() + 4)):
+                if (x >= (line.getP1().getX() - PADDING)) and (x <= (line.getP1().getX() + PADDING)):
                     x_range = True
                 #print("y is greater than ", line.getP1().getY(), "and less than ", line.getP2().getY())
                 if y >= line.getP1().getY() and y <= line.getP2().getY():
@@ -51,7 +53,7 @@ class Board:
             # Check horizontal lines in array
             elif line.getP1().getY() == line.getP2().getY():
                 # Check if click matches range in line's vertical width
-                if (y >= (line.getP1().getY() - 4)) and (y <= (line.getP1().getY() + 4)):
+                if (y >= (line.getP1().getY() - PADDING)) and (y <= (line.getP1().getY() + PADDING)):
                     y_range = True
                 if x >= line.getP1().getX() and x <= line.getP2().getX():
                     x_range = True
