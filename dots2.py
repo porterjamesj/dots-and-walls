@@ -10,13 +10,14 @@ from graphics import *
 
 class Board:
 
+    LINE_WIDTH = 6
+
     def __init__(self, board_size):
         self.board_size = board_size
         self.empty_lines = []
         self.chosen_lines = []
         self.circles = []
         self.win = None
-        self.LINE_WIDTH = 6
         self.create_board()
 
         return
