@@ -209,19 +209,6 @@ class Board:
     def calculate_original_coordinate(self, graph_coordinate):
         return int((graph_coordinate - (self.board_size * 10)) / 50)
 
-    def print_empty_lines(self):
-        for line in self.get_empty_lines():
-            print("Line start = ", line.getP1().getX(), line.getP1().getY(),
-                  "End = ", line.getP2().getX(), line.getP2().getY())
-        return
-
-    def print_chosen_lines(self):
-        print("Chosen lines tracker:")
-        for line in self.get_chosen_lines():
-            print("Line start = ", line.getP1().getX(), line.getP1().getY(),
-                  "End = ", line.getP2().getX(), line.getP2().getY())
-        return
-
 
 class Player:
 
