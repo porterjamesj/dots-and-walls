@@ -307,8 +307,7 @@ class Game:
 
         click = self.board.win.getMouse()
         print("x, y:", click.getX(), click.getY())
-        clicked_line = self.board.get_line_from_click(
-            click, self.board.empty_lines)
+        clicked_line = self.board.get_line_from_click(click)
         if clicked_line != None:
             self.isValid = self.check_chosen_lines(clicked_line)
             if self.isValid:
