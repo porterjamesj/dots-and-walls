@@ -149,7 +149,7 @@ class Board:
             for y in range(self.board_size):
                 prev_point = point
                 point = self.draw_point(x, y)
-                if (prev_point != None):
+                if prev_point:
                     self.draw_vertical_line(x, y, prev_point, point)
                     self.draw_horizontal_line(x, y, prev_point, point)
 
