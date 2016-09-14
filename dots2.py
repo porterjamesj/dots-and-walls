@@ -155,7 +155,7 @@ class Board:
         # self.print_empty_lines()
         return
 
-    def update_board(self, clicked_line, player_id):
+    def update_board(self, clicked_line, player):
         # Update arrays
         self.chosen_lines.append(clicked_line)
         self.empty_lines.remove(clicked_line)
@@ -167,10 +167,7 @@ class Board:
 
         # Update screen
         line = Line(clicked_line.getP1(), clicked_line.getP2())
-        if player_id == 0:
-            line.setOutline(color_rgb(38, 181, 172))
-        elif player_id == 1:
-            line.setOutline(color_rgb(199, 69, 26))
+        line.setOutline(player.color_id)
         line.setWidth(self.LINE_WIDTH)
         line.draw(self.win)
 
@@ -180,14 +177,10 @@ class Board:
 
         return
 
-    def draw_square(self, point1, point2, player_id):
+    def draw_square(self, point1, point2, player):
         square = Rectangle(point1, point2)
-        if player_id == 0:
-            square.setOutline(color_rgb(38, 181, 172))
-            square.setFill(color_rgb(38, 181, 172))
-        elif player_id == 1:
-            square.setOutline(color_rgb(199, 69, 26))
-            square.setFill(color_rgb(199, 69, 26))
+        square.setOutline(player.color_id)
+        square.setFill(player.color_id)
         square.draw(self.win)
 
         # Now redraw circles on top (only for board sizes less than 6) for
@@ -291,7 +284,7 @@ class Game:
             self.isValid = self.check_chosen_lines(clicked_line)
             if self.isValid:
                 print("This line has not been clicked. Proceed.")
-                self.board.update_board(clicked_line, player.get_player_id())
+                self.board.update_board(clicked_line, player)
                 isSquare = self.check_complete_square(clicked_line, player)
                 return isSquare
             else:
@@ -406,13 +399,13 @@ class Game:
             # Check for completed squares
             if right in self.board.chosen_lines and top_right in self.board.chosen_lines and bottom_right in self.board.chosen_lines:
                 self.board.draw_square(
-                    clicked_line.getP1(), right.getP2(), player.get_player_id())
+                    clicked_line.getP1(), right.getP2(), player)
                 player.add_score(10)
                 print("10 points for Hufflepuff!")
                 isSquare = True
             if left in self.board.chosen_lines and top_left in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
                 self.board.draw_square(
-                    left.getP1(), clicked_line.getP2(), player.get_player_id())
+                    left.getP1(), clicked_line.getP2(), player)
                 player.add_score(10)
                 print("10 points for Hufflepuff!")
                 isSquare = True
@@ -488,13 +481,13 @@ class Game:
             # Check for complete square
             if top in self.board.chosen_lines and top_right in self.board.chosen_lines and top_left in self.board.chosen_lines:
                 self.board.draw_square(
-                    top.getP1(), clicked_line.getP2(), player.get_player_id())
+                    top.getP1(), clicked_line.getP2(), player)
                 player.add_score(10)
                 print("10 points for Hufflepuff!")
                 isSquare = True
             if bottom in self.board.chosen_lines and bottom_right in self.board.chosen_lines and bottom_left in self.board.chosen_lines:
                 self.board.draw_square(
-                    clicked_line.getP1(), bottom.getP2(), player.get_player_id())
+                    clicked_line.getP1(), bottom.getP2(), player)
                 player.add_score(10)
                 print("10 points for Hufflepuff!")
                 isSquare = True
