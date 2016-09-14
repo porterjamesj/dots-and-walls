@@ -28,9 +28,6 @@ class Board:
 
         return
 
-    def get_win(self):
-        return self.win
-
     # Returns line object from array given mouse coordinate
     def get_line_from_click(self, click, line_array):
         x = click.getX()
@@ -123,7 +120,7 @@ class Board:
             v_line = Line(point_a, point_b)
             v_line.setOutline(color_rgb(225, 225, 225))
             v_line.setWidth(self.LINE_WIDTH)
-            v_line.draw(self.get_win())
+            v_line.draw(self.win)
             # Add to array of empty lines
             self.empty_lines.append(v_line)
 
@@ -134,7 +131,7 @@ class Board:
             h_line = Line(point_b, h_end)
             h_line.setOutline(color_rgb(225, 225, 225))
             h_line.setWidth(self.LINE_WIDTH)
-            h_line.draw(self.get_win())
+            h_line.draw(self.win)
             # Add to array of empty lines
             self.empty_lines.append(h_line)
 
@@ -156,7 +153,7 @@ class Board:
         # Draw circles on screen
         # (Keeps circle on top of lines by drawing at the end)
         for c in self.circles:
-            c.draw(self.get_win())
+            c.draw(self.win)
 
         # self.print_empty_lines()
         return
@@ -179,7 +176,7 @@ class Board:
         elif player_id == 1:
             line.setOutline(color_rgb(199, 69, 26))
         line.setWidth(self.LINE_WIDTH)
-        line.draw(self.get_win())
+        line.draw(self.win)
 
         # print("\n")
         # self.print_chosen_lines()
@@ -195,14 +192,14 @@ class Board:
         elif player_id == 1:
             square.setOutline(color_rgb(199, 69, 26))
             square.setFill(color_rgb(199, 69, 26))
-        square.draw(self.get_win())
+        square.draw(self.win)
 
         # Now redraw circles on top (only for board sizes less than 6) for
         # better graphics
         if self.board_size < 6:
             for c in self.circles:
                 c.undraw()
-                c.draw(self.get_win())
+                c.draw(self.win)
 
     def calculate_current_coordinate(self, coordinate_point):
         return self.board_size * 10 + coordinate_point * 50
@@ -308,7 +305,7 @@ class Game:
         elif player.get_player_id() == 1:
             print("\nPlayer 2: Click on an empty line.")
 
-        click = self.board.get_win().getMouse()
+        click = self.board.win.getMouse()
         print("x, y:", click.getX(), click.getY())
         clicked_line = self.board.get_line_from_click(
             click, self.board.empty_lines)
