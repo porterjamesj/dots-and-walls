@@ -300,6 +300,11 @@ class Game:
         return True
 
     def check_complete_square(self, clicked_line, player):
+        # this function is pretty gnarly and could probalby do with a
+        # refactoring, similar to some of the functions in
+        # `Board`. Pulling out identical / very similar pieces of code
+        # into functions whose names capture what they do will
+        # probably get you pretty far, try it out!
         isSquare = False
 
         # Grab original coordinate points for x, then
