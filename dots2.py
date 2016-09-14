@@ -60,6 +60,9 @@ class Board:
         return None
 
     # Returns line object from array given clicked line
+    #
+    # I'm not going to write it out but there's probably opportunities
+    # for refactoring here similar to those in get_line_from_click
     def get_line(self, clicked_line):
         x1 = clicked_line.getP1().getX()
         y1 = clicked_line.getP1().getY()
