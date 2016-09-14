@@ -145,16 +145,10 @@ class Board:
         point = Point(self.calculate_current_coordinate(0),
                       self.calculate_current_coordinate(0))
         prev_point = None
-
         for x in range(self.board_size):
             for y in range(self.board_size):
-
-                #print("Current x, y = ", current_x, current_y)
                 prev_point = point
-
-                # Draw points (circles) on screen
                 point = self.draw_point(x, y)
-
                 if (prev_point != None):
                     self.draw_vertical_line(x, y, prev_point, point)
                     self.draw_horizontal_line(x, y, prev_point, point)
