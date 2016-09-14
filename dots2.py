@@ -210,7 +210,6 @@ class Player:
             self.color_id = color_rgb(38, 181, 172)
         else:
             self.color_id = color_rgb(199, 69, 26)
-        return
 
     def get_player_id(self):
         return self.player_id
@@ -223,7 +222,6 @@ class Player:
 
     def add_score(self, score_increment):
         self.score = self.score + score_increment
-        return
 
 
 class Game:
@@ -234,7 +232,6 @@ class Game:
         self.player2 = Player(1)
         self.isValid = True
         self.start_game()
-        return
 
     def start_game(self):
         print("Let's begin!")
