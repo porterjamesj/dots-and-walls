@@ -29,13 +29,13 @@ class Board:
         return
 
     # Returns line object from array given mouse coordinate
-    def get_line_from_click(self, click, line_array):
+    def get_line_from_click(self, click):
         x = click.getX()
         y = click.getY()
         x_range = False
         y_range = False
 
-        for line in line_array:
+        for line in self.empty_lines:
             # Check vertical lines in array
             if line.getP1().getX() == line.getP2().getX():
                 # Check if click matches range in line's horizontal width (gives some padding)
