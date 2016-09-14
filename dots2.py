@@ -251,6 +251,11 @@ class Game:
                 isSquare = self.play_turn(active_player)
 
             # Switch players
+            #
+            # i'm a bit confuse about the need for the self.isValid
+            # check here?  might be worth a comment somewhere
+            # explaining what it means, or coming up with a clearer
+            # name for it or way to do what it does.
             if active_player == self.player1 and self.isValid:
                 active_player = self.player2
             elif active_player == self.player2 and self.isValid:
